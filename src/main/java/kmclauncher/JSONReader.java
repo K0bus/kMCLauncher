@@ -1,4 +1,4 @@
-package kMCUpdaterLib;
+package kmclauncher;
 
 import java.io.BufferedReader;
 import java.io.IOException;

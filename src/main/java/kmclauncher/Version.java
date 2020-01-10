@@ -1,4 +1,4 @@
-package kMCUpdaterLib;
+package kmclauncher;
 
 import java.io.IOException;
 import java.net.URL;

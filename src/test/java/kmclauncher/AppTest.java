@@ -1,21 +1,13 @@
-package kMCUpdaterLib;
+package kmclauncher;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Hello world!
- */
 public final class AppTest {
     private AppTest() {
     }
 
-    /**
-     * Says hello to the world.
-     * 
-     * @param args The arguments of the program.
-     */
     public static void main(String[] args) {
         try {
             Updater updater = new Updater(new URL("http://127.0.0.1/kMCUpdate-Server/"),
