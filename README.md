@@ -1,7 +1,9 @@
 # kMCLauncher
 kMCLauncher est une nouvelle librairie Java permettant au développeur et créateur de serveur de pouvoir ce lancer dans la création de leurs propres launcher Custom facilement et rapidement.
 
-Ce projet reprend le principe de la suite de librairie créées par @Litarvan.
+Ce projet reprend le principe de la suite de librairie créées par [@Litarvan][0].
+
+[0]: https://github.com/Litarvan
 
 Cette librairie a pour différences l'utilisation des ressources de Mojang pour la pluspart des téléchargement.
 L'avantage étant pour de ne pas avoir à récupérez les assets / librairies de Minecraft sur votre serveur pour les faires télécharger.
