@@ -1,4 +1,4 @@
-package kmclauncher;
+package kmclauncher.launch;
 
 public enum LaunchType
 {
