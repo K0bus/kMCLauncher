@@ -1,4 +1,4 @@
-package kmclauncher;
+package kmclauncher.update;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +13,11 @@ import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import kmclauncher.utils.Hash;
+import kmclauncher.utils.JSONReader;
+import kmclauncher.utils.Logger;
+import kmclauncher.utils.Version;
 
 public class Updater {
 
@@ -42,6 +47,11 @@ public class Updater {
     }
 
     private void remover(final File folder, List<String> hashList) {
+        if(!folder.exists())
+        {
+            Logger.error("Directory " + folder.getName() + " not found");
+            return;
+        }
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 if(fileEntry.list().length>0){
@@ -160,10 +170,15 @@ public class Updater {
                 assetsIndexesDir.mkdirs();
                 Logger.addDir("assets/indexes");
             }
-            if(!Hash.checkFile(new File(assetsIndexesDir, versionManifest.getJSONObject("assetIndex").getString("id") + ".json"), versionManifest.getJSONObject("assetIndex").getString("sha1")))
+            if(new File(assetsIndexesDir, versionManifest.getJSONObject("assetIndex").getString("id") + ".json").exists())
             {
-                Downloader.download(new File(assetsIndexesDir, versionManifest.getJSONObject("assetIndex").getString("id") + ".json"), versionManifest.getJSONObject("assetIndex").getString("url"), true);
+                if(!Hash.checkFile(new File(assetsIndexesDir, versionManifest.getJSONObject("assetIndex").getString("id") + ".json"), versionManifest.getJSONObject("assetIndex").getString("sha1")))
+                {
+                    Downloader.download(new File(assetsIndexesDir, versionManifest.getJSONObject("assetIndex").getString("id") + ".json"), versionManifest.getJSONObject("assetIndex").getString("url"), true);
+                }
             }
+            else
+            Downloader.download(new File(assetsIndexesDir, versionManifest.getJSONObject("assetIndex").getString("id") + ".json"), versionManifest.getJSONObject("assetIndex").getString("url"), true);
             Logger.info("Assets directory configured");
             if(!this.updateAssets(assetsDir, JSONReader.readJsonFromUrl(new URL(versionManifest.getJSONObject("assetIndex").getString("url"))).getJSONObject("objects")))
             {
@@ -302,29 +317,27 @@ public class Updater {
 
     private boolean updateMinecraftJar(JSONObject manifest) {
         File minecraftjar = new File(this.gameDir, "minecraft.jar");
-        if(!Hash.checkFile(minecraftjar, manifest.getString("sha1")))
-        {  
-            if(!minecraftjar.exists())
-            {
-                Logger.info("Downloading minecraft.jar");
+        if(minecraftjar.exists())
+            if(!Hash.checkFile(minecraftjar, manifest.getString("sha1")))
+            {  
+                Logger.warn("minecraft.jar corrupted or modified, fetching official jar");
+                if(Downloader.download(new File(this.gameDir, "minecraft.jar"), manifest.getString("url"), true))
+                    return true;
+                else
+                    return false;
             }
             else
             {
-                Logger.warn("minecraft.jar corrupted or modified, fetching official minecraft.jar");
-            }
-            if(Downloader.download(new File(this.gameDir, "minecraft.jar"), manifest.getString("url"), true))
-            {
+                Logger.info("minecraft.jar already downloaded");
                 return true;
             }
-            else
-            {
-                return false;
-            }
-        }
         else
         {
-            Logger.info("minecraft.jar already downloaded");
-            return true;
+            Logger.info("Downloading minecraft.jar");
+            if(Downloader.download(new File(this.gameDir, "minecraft.jar"), manifest.getString("url"), true))
+                return true;
+            else
+                return false;
         }
     }
 }

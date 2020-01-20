@@ -1,10 +1,12 @@
-package kmclauncher;
+package kmclauncher.update;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+
+import kmclauncher.utils.Logger;
 
 
 public class Downloader {
