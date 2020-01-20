@@ -11,7 +11,14 @@ public final class AppTest {
     public static void main(String[] args) {
         try {
             Updater updater = new Updater(new URL("http://127.0.0.1/kMCUpdate-Server/"),
-                    new File(System.getenv("APPDATA") + File.separator + ".test"), "1.12.2");
+                    new File(System.getenv("APPDATA") + File.separator + ".akuragaming"), "1.12.2");
+            if(updater.removeBadFile("mods")){
+                Logger.info("Remover successfully runned");
+            }
+            else
+            {
+                Logger.error("Error with Remover");
+            }
             if(updater.updateMojang()){
                 Logger.info("Mojang updater was successfully done");
             }

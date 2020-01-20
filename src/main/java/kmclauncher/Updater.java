@@ -1,9 +1,13 @@
 package kmclauncher;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONArray;
@@ -35,6 +39,63 @@ public class Updater {
             return;
         }
         Logger.info("Game path configured");
+    }
+
+    private void remover(final File folder, List<String> hashList) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                if(fileEntry.list().length>0){
+                    this.remover(fileEntry, hashList);
+                }
+
+                if(fileEntry.list().length<=0){
+                    Logger.info("Remove directory " + fileEntry.getName() + "because is empty");
+                    fileEntry.delete();
+                }
+            } else {
+                try {
+                    if (!hashList.contains(Hash.fileSHA1(fileEntry))) {
+
+                        Logger.info("Remove " + fileEntry.getName() + "(" + Hash.fileSHA1(fileEntry) + ")");
+                        fileEntry.delete();
+                    }
+                } catch (FileNotFoundException e) {
+                    Logger.info("File not found");
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    Logger.info("Can't calculate SHA1");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    Logger.info("Can't access file");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private List<String> getHash(JSONObject serverManifest, JSONObject versionManifest, JSONObject assetManifest){
+        List<String> hashList = new ArrayList<String>();
+        for (Object o : serverManifest.getJSONArray("downloads")) {
+            if (o instanceof JSONObject) {
+                JSONObject element = (JSONObject)o;
+                hashList.add(element.getString("sha1"));
+            }
+        }
+        return hashList;
+    }
+    public boolean removeBadFile(String dir)
+    {
+        try {
+            JSONObject serverManifest = JSONReader.readJsonFromUrl(new URL(this.downloadServer + "content.json"));
+            JSONObject versionManifest = JSONReader.readJsonFromUrl(version.getUrl());
+            JSONObject assetManifest = JSONReader.readJsonFromUrl(new URL(versionManifest.getJSONObject("assetIndex").getString("url"))).getJSONObject("objects");
+            this.remover(new File(this.gameDir, dir), this.getHash(serverManifest, versionManifest, assetManifest));
+        } catch (JSONException | IOException e) {
+            Logger.error("Unable to access content.json on update server");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public boolean updateServer() {
