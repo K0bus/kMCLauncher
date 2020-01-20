@@ -23,7 +23,8 @@ public class Version {
         List<String> version = new ArrayList<String>();
         version.add(gameVersion);
         versionInfo = JSONReader.findArray(manifest.getJSONArray("versions"), "id", version);
-
+        if(versionInfo == null)
+            Logger.error("Version not found");
         this.id = versionInfo.getString("id");
         this.type = versionInfo.getString("type");
         this.time = versionInfo.getString("time");
