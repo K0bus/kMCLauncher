@@ -1,4 +1,4 @@
-package kmclauncher.update;
+package kmclauncher.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
