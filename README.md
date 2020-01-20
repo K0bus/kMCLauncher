@@ -26,7 +26,11 @@ Pour la version il faudra la déclarer en String, cette données permet de récu
 
 [1]: https://launchermeta.mojang.com/mc/game/version_manifest.json
 
-Une fois votre Updater créé il ne vous reste plus qu'à lancer les mises à jour, elles sont donc divisées en deux, la partie Mojang et votre partie privé.
+Une fois votre Updater créé vous pouvez vérifier les fichiers indésirable dans les dossiers de votre choix.
+
+`updater.removeBadFile("mods")`
+
+Ensuite il ne vous reste plus qu'à lancer les mises à jour, elles sont donc divisées en deux, la partie Mojang et votre partie privé.
 
 `updater.updateMojang();`
 
