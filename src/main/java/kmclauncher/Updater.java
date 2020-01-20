@@ -141,7 +141,7 @@ public class Updater {
             }
             Logger.info("Libs directory configured");
             // Fetching minecraft.jar
-            if (!this.updateMinecraftJar(libs, versionManifest.getJSONObject("downloads").getJSONObject("client"))) {
+            if (!this.updateMinecraftJar(versionManifest.getJSONObject("downloads").getJSONObject("client"))) {
                 Logger.error("Error while updating minecraft.jar");
                 return false;
             }
@@ -300,8 +300,8 @@ public class Updater {
         return true;
     }
 
-    private boolean updateMinecraftJar(File libs, JSONObject manifest) {
-        File minecraftjar = new File(libs, "minecraft.jar");
+    private boolean updateMinecraftJar(JSONObject manifest) {
+        File minecraftjar = new File(this.gameDir, "minecraft.jar");
         if(!Hash.checkFile(minecraftjar, manifest.getString("sha1")))
         {  
             if(!minecraftjar.exists())
@@ -312,7 +312,7 @@ public class Updater {
             {
                 Logger.warn("minecraft.jar corrupted or modified, fetching official minecraft.jar");
             }
-            if(Downloader.download(new File(libs, "minecraft.jar"), manifest.getString("url"), true))
+            if(Downloader.download(new File(this.gameDir, "minecraft.jar"), manifest.getString("url"), true))
             {
                 return true;
             }
