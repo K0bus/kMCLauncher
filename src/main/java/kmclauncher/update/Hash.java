@@ -1,4 +1,4 @@
-package kmclauncher;
+package kmclauncher.update;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import org.json.JSONException;
+
+import kmclauncher.utils.Logger;
 
 public class Hash
 {

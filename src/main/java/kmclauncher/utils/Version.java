@@ -1,4 +1,4 @@
-package kmclauncher;
+package kmclauncher.utils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 public class Version {
     private String id;
+    private String gameVersion;
     private String type;
     private URL url;
     private String time;
@@ -26,6 +27,7 @@ public class Version {
         if(versionInfo == null)
             Logger.error("Version not found");
         this.id = versionInfo.getString("id");
+        this.gameVersion = gameVersion;
         this.type = versionInfo.getString("type");
         this.time = versionInfo.getString("time");
         this.releaseTime = versionInfo.getString("releaseTime");
@@ -35,6 +37,10 @@ public class Version {
     public URL getUrl()
     {
         return this.url;
+    }
+    public String getVersion()
+    {
+        return this.gameVersion;
     }
     public String getTime()
     {

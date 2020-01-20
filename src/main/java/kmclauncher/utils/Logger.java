@@ -1,4 +1,4 @@
-package kmclauncher;
+package kmclauncher.utils;
 
 public final class Logger{
     public static void warn(final String msg) {

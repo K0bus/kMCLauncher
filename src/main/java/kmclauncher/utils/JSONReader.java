@@ -1,4 +1,4 @@
-package kmclauncher;
+package kmclauncher.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
