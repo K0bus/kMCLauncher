@@ -60,8 +60,13 @@ public class Configurator
     {
         JSONObject userConfig = this.config.getJSONObject("user");
         MinecraftUser tempUser = new MinecraftUser();
-        if(!userConfig.isEmpty())
-            tempUser.validate(userConfig.getString("username"), userConfig.getString("accessToken"), userConfig.getString("clientToken"), userConfig.getString("uuid"));
+        if(userConfig.has("username"))
+        {
+            if(tempUser.validate(userConfig.getString("username"), userConfig.getString("accessToken"), userConfig.getString("clientToken"), userConfig.getString("uuid")))
+            {
+                Logger.info("User "+ userConfig.getString("username") + " successfully logged in");
+            }
+        }
         return tempUser;
     }
     public JSONObject getParams()
@@ -112,6 +117,7 @@ public class Configurator
         t = this.config.has("user") && this.config.has("options");
         if(t)
         {
+            Logger.info("Check options integrity");
             JSONObject param = this.config.getJSONObject("options");
             t = param.has("minRam") && param.has("maxRam") && param.has("resX") && param.has("resY") && param.has("console") && param.has("sendCrash") && param.has("saveAuth");
             if(!t)
