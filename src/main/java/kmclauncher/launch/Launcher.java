@@ -44,7 +44,7 @@ public class Launcher
     }
     public void run()
     {
-        this.generateCommand(this.config.getParams().getInt("minRAM"), this.config.getParams().getInt("maxRAM"), this.gameDir);
+        this.generateCommand(this.config.getParams().getInt("minRam"), this.config.getParams().getInt("maxRam"), this.gameDir);
         Logger.info(this.command);
         Runtime rt = Runtime.getRuntime();
         try {
