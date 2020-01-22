@@ -40,7 +40,7 @@ public final class AppTest {
             Configurator config = new Configurator(MC_GAMEDIR, "launcher_options.json");
             MinecraftUser user = config.getUser();
             user.isAuth();
-            Launcher launcher = new Launcher(LaunchType.Vanilla, MC_GAMEDIR, "1.12.2", user);
+            Launcher launcher = new Launcher(LaunchType.Vanilla, MC_GAMEDIR, "1.12.2", user, config);
             launcher.run();
         } catch (MalformedURLException e) {
             e.printStackTrace();

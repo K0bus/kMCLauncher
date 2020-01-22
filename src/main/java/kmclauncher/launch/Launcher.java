@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import kmclauncher.auth.MinecraftUser;
+import kmclauncher.utils.Configurator;
 import kmclauncher.utils.JSONReader;
 import kmclauncher.utils.Logger;
 import kmclauncher.utils.Version;
@@ -22,37 +23,16 @@ public class Launcher
     private File gameDir;
     private Version version;
     private MinecraftUser user;
+    private Configurator config;
     private List<String> libraries;
     private Process pr;
 
-    /**
-     * "C:\Program Files\Java\jre1.8.0_231\bin\java"
-     * -XX:-UseAdaptiveSizePolicy
-     * -XX:+UseConcMarkSweepGC
-     * -Xms2048M
-     * -Xmx8096M
-     * -Djava.library.path=C:\Users\K0bus\AppData\Roaming\.akuragaming/natives
-     * -cp libraries;minecraft.jar
-     * net.minecraft.launchwrapper.Launch
-     * --username=K0bus
-     * --accessToken eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NTE2MWYzNzI0MTc0ZTcxOWQwODkzM2I0OTJjOGVmNiIsInlnZ3QiOiI1ZDA5OWE0NTJmMTk0NGUzOGE2YzVlODBjYjVmMDMyOSIsInNwciI6ImQ1MDdkMzE3NWU4NDQyN2JiNDNiYWRkNWIxNWFlNzYyIiwiaXNzIjoiWWdnZHJhc2lsLUF1dGgiLCJleHAiOjE1Nzk2NTgwNTAsImlhdCI6MTU3OTQ4NTI1MH0.J8067CpP2-KawPBFgrsqAXJNsveCWqJMz2qlMhH7Lfo
-     * --version 1.12
-     * --gameDir C:\Users\K0bus\AppData\Roaming\.akuragaming
-     * --assetsDir C:\Users\K0bus\AppData\Roaming\.akuragaming\assets
-     * --assetIndex 1.12
-     * --userProperties {}
-     * --uuid d507d3175e84427bb43badd5b15ae762
-     * --userType legacy
-     * --tweakClass net.minecraftforge.fml.common.launcher.FMLTweaker  
-     * 
-     */
-
-    public Launcher(JSONObject manifest, LaunchType launchType, File gameDir, String gameVersion, MinecraftUser user)
+    public Launcher(LaunchType launchType, File gameDir, String gameVersion, MinecraftUser user, Configurator config)
     {
-        this.manifest = manifest;
         this.launchType = launchType;
         this.user = user;
         this.gameDir = gameDir;
+        this.config = config;
         try {
             this.version = new Version(gameVersion);
             this.manifest = JSONReader.readJsonFromUrl(version.getUrl());
@@ -64,7 +44,7 @@ public class Launcher
     }
     public void run()
     {
-        this.generateCommand(2048, 8096, this.gameDir);
+        this.generateCommand(this.config.getParams().getInt("minRAM"), this.config.getParams().getInt("maxRAM"), this.gameDir);
         Logger.info(this.command);
         Runtime rt = Runtime.getRuntime();
         try {
@@ -91,7 +71,7 @@ public class Launcher
             launchClass = "net.minecraft.launchwrapper.Launch";
 
         String username = "--username=" + this.user.getUsername();
-        String token = "--accessToken " + this.user.getToken();
+        String token = "--accessToken " + this.user.getAccessToken();
         String vers = "--version " + this.version.getVersion();
         String dir = "--gameDir " + this.gameDir.getAbsolutePath() + " --assetsDir " + new File(this.gameDir, "assets").getAbsolutePath();
         String assetIndex = "--assetIndex " + manifest.getJSONObject("assetIndex").getString("id");
